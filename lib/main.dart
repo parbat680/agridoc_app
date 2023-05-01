@@ -16,10 +16,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheLanguage.init();
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthBlocState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            Get.offAllNamed('/home');
+            Get.offAndToNamed('/home');
           }
         },
         child: BlocBuilder<LocaleBloc, LocaleState>(

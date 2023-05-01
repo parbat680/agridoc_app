@@ -19,7 +19,6 @@ class HomeTabPage extends StatefulWidget {
 
 class _HomeTabPageState extends State<HomeTabPage>
     with TickerProviderStateMixin {
-  PageController _pageController = PageController(initialPage: 0);
   late TabController _tabController;
   @override
   void initState() {

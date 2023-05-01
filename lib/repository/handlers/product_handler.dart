@@ -77,4 +77,15 @@ class ProductHandler {
 
     return products;
   }
+
+  Future addDelivery(Map<String, dynamic> deliveryDetails) async {
+    try {
+      final response = await _helper.post('delivery/add', deliveryDetails);
+      log(response.toString());
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
 }

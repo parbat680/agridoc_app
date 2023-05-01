@@ -22,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  RxBool showPass = false.obs;
 
   @override
   void initState() {
@@ -104,29 +105,33 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       margin: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 0),
-                      child: TextFormField(
-                        controller: _password,
-                        obscureText: true,
-                        keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
-                          suffix: GestureDetector(
-                            onTap: () {},
-                            child: Icon(
-                              // showpass.value
-                              //     ? Icons.visibility_off
-                              Icons.visibility,
-                              color: Colors.grey,
-                              size: 20,
+                      child: Obx(
+                        () => TextFormField(
+                          controller: _password,
+                          obscureText: !showPass.value,
+                          keyboardType: TextInputType.visiblePassword,
+                          decoration: InputDecoration(
+                            suffix: GestureDetector(
+                              onTap: () {
+                                showPass.value = !showPass.value;
+                              },
+                              child: Icon(
+                                showPass.value
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
                             ),
+                            label: Text(Languages.of(context).password,
+                                style: poppinsFont),
                           ),
-                          label: Text(Languages.of(context).password,
-                              style: poppinsFont),
+                          validator: (val) {
+                            if (val!.length < 6) {
+                              return "password should be of minimum 6 characters";
+                            }
+                          },
                         ),
-                        validator: (val) {
-                          if (val!.length < 6) {
-                            return "password should be of minimum 6 characters";
-                          }
-                        },
                       ),
                     ),
                     const SizedBox(
@@ -137,7 +142,6 @@ class _LoginPageState extends State<LoginPage> {
                       builder: (context, state) {
                         return ElevatedButton(
                           onPressed: () {
-                            log("mwe");
                             if (_formKey.currentState!.validate()) {
                               _authBloc.add(Login(
                                   password: _password.text,

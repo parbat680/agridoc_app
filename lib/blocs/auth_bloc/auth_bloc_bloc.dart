@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:agridoc/repository/handlers/user_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,9 +15,13 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       emit(AuthLoading());
       if (event is SignUp) {
         try {
-          await _userRepository.signUp(
+          bool isDone = await _userRepository.signUp(
               event.username, event.phone, event.password);
-          emit(AuthAuthenticated());
+          if (isDone) {
+            emit(AuthAuthenticated());
+          } else {
+            emit(AuthUnauthenticated());
+          }
         } catch (e) {
           emit(const AuthError(error: "Something went wrong"));
         }
@@ -23,7 +29,9 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
 
       if (event is CheckAuth) {
         if (await _userRepository.hasToken()) {
+          log((await _userRepository.hasToken()).toString());
           emit(AuthAuthenticated());
+          return;
         } else {
           emit(AuthUnauthenticated());
         }

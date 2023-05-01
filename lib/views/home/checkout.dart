@@ -127,7 +127,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    _razorPay.razorpayinit(widget.amount, context);
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       // Do something with the form data
@@ -137,6 +136,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       print('City: $_city');
                       print('State: $_state');
                       print('Zip: $_zip');
+                      _razorPay.razorpayinit(widget.amount, context, {
+                        "name": _name,
+                        "address1": _address,
+                        "address2": _state,
+                        "city": _city,
+                        "pincode": _zip
+                      });
                     }
                   },
                   child: Text('Submit'),

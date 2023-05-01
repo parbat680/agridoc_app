@@ -1,16 +1,72 @@
+import 'dart:io';
+
 import 'package:agridoc/utils/image_chooser.dart';
+import 'package:agridoc/utils/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
-class PredictPage extends StatelessWidget {
+class PredictPage extends StatefulWidget {
   PredictPage({Key? key}) : super(key: key);
 
+  @override
+  State<PredictPage> createState() => _PredictPageState();
+}
+
+class _PredictPageState extends State<PredictPage> {
+  showDisease(String a, File image) {
+    isPicked.value = true;
+    disease = a;
+    _image = image;
+    context.loaderOverlay.hide();
+  }
+
   RxBool isPicked = false.obs;
+
+  String disease = "";
+
+  late File _image;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: showPickButton(context),
+        body: LoaderOverlay(
+            child: Obx(
+                () => !isPicked.value ? showPickButton() : showDiseaseCard())),
+      ),
+    );
+  }
+
+  showDiseaseCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              spreadRadius: 5,
+              blurRadius: 5,
+            )
+          ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 200,
+            child: Image.file(
+              _image,
+              fit: BoxFit.fill,
+            ),
+          ),
+          Text(
+            disease,
+            style: headingBold,
+          )
+        ],
       ),
     );
   }
@@ -130,9 +186,9 @@ class PredictPage extends StatelessWidget {
     );
   }
 
-  showPickButton(context) {
+  showPickButton() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xff22c1c3), Color(0xfffdbb2d)],
           begin: Alignment.topCenter,
@@ -142,7 +198,8 @@ class PredictPage extends StatelessWidget {
       child: Center(
         child: ElevatedButton(
           onPressed: () {
-            ImageChooser().PopupSelector(context);
+            context.loaderOverlay.show();
+            ImageChooser().PopupSelector(context, showDisease);
           },
           child: Text(
             'Pick an Image',

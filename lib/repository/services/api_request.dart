@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:agridoc/repository/handlers/user_repo.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:agridoc/repository/handlers/error_handler.dart';
 import 'package:dio/dio.dart';
 
 class ApiBaseHelper {
-  String url = "http://agridoc.ap-south-1.elasticbeanstalk.com";
+  String url = "http://10.0.2.2:3000";
   Future post(String endpoint, Map<dynamic, dynamic> data) async {
     var dio = Dio();
     var responseJson;
+    UserRepository user = UserRepository();
 
     try {
       var response = await dio.post(
@@ -17,6 +19,7 @@ class ApiBaseHelper {
         data: data,
         options: Options(headers: {
           'content-type': 'application/json',
+          'token': await user.getToken(),
         }),
       );
       log(response.toString());
@@ -31,12 +34,15 @@ class ApiBaseHelper {
   Future get(String endpoint, String query) async {
     var dio = Dio();
     var responseJson;
-    print("$url/$endpoint/$query");
+    UserRepository user = UserRepository();
+    log("$url/$endpoint/$query");
+    log(await user.getToken());
     try {
       var response = await dio.get(
         "$url/$endpoint/$query",
         options: Options(headers: {
           'content-type': 'application/json',
+          'token': await user.getToken(),
         }),
       );
 
@@ -61,5 +67,25 @@ class ApiBaseHelper {
         throw AppErrors(
             message: "Something went wrong", error: "unknown error");
     }
+  }
+
+  uploadImage(
+    File file,
+    String endpoint,
+  ) async {
+    String fileName = file.path.split('/').last;
+    print(fileName);
+
+    FormData data = FormData.fromMap({
+      "image": await MultipartFile.fromFile(file.path,
+          filename: fileName, contentType: MediaType('image', 'png')),
+    });
+
+    Dio dio = Dio();
+
+    var response = await dio.post("$url/$endpoint",
+        data: data, options: Options(headers: {}));
+
+    return response.data;
   }
 }

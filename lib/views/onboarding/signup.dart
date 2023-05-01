@@ -7,28 +7,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
+import '../../utils/text_sizes.dart';
+
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
 
   late final AuthBloc _authBloc;
   final TextEditingController _username = TextEditingController();
-  final TextEditingController _phone = TextEditingController();
+  final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  RxBool _showPass = false.obs;
 
   @override
   Widget build(BuildContext context) {
     _authBloc = BlocProvider.of<AuthBloc>(context);
-    print("IN build...");
+
     return Scaffold(
       body: LoaderOverlay(
         child: SafeArea(
           child: SingleChildScrollView(
             child: BlocListener<AuthBloc, AuthBlocState>(
               listener: (context, state) {
-                // if (state is AuthAuthenticated) {
-                //   Navigator.pushNamedAndRemoveUntil(
-                //       context, '/home', (route) => false);
-                // }
+                if (state is AuthAuthenticated) {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/home', (route) => false);
+                }
               },
               child: BlocBuilder<AuthBloc, AuthBlocState>(
                 bloc: _authBloc,
@@ -51,11 +54,26 @@ class SignUpPage extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          Languages.of(context).appName,
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w500,
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            Languages.of(context).appName,
+                            style: headingBold.copyWith(
+                                fontSize: 26, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Your go-to app for all your gardening essentials.",
+                            style: poppinsFont.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w200),
                           ),
                         ),
 
@@ -72,34 +90,40 @@ class SignUpPage extends StatelessWidget {
                         ),
 
                         TextFormField(
-                          controller: _phone,
-                          keyboardType: TextInputType.number,
+                          controller: _email,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
-                              Icons.phone,
+                              Icons.email,
                               size: 20,
                             ),
-                            label: Text(Languages.of(context).phone),
+                            label: Text("Email"),
                           ),
                         ),
-
-                        TextFormField(
-                          controller: _password,
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.password,
-                              size: 20,
-                            ),
-                            suffix: GestureDetector(
-                              onTap: () {},
-                              child: Icon(
-                                Icons.visibility,
-                                color: Colors.grey,
+                        Obx(
+                          () => TextFormField(
+                            controller: _password,
+                            obscureText: !_showPass.value,
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.password,
                                 size: 20,
                               ),
+                              suffix: GestureDetector(
+                                onTap: () {
+                                  _showPass.value = !_showPass.value;
+                                },
+                                child: Icon(
+                                  _showPass.value
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                  size: 20,
+                                ),
+                              ),
+                              label: Text(Languages.of(context).password),
                             ),
-                            label: Text(Languages.of(context).password),
                           ),
                         ),
 
@@ -112,7 +136,7 @@ class SignUpPage extends StatelessWidget {
                             _authBloc.add(SignUp(
                                 username: _username.text,
                                 password: _password.text,
-                                phone: _phone.text));
+                                phone: _email.text));
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 50),

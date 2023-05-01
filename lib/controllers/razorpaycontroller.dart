@@ -1,3 +1,4 @@
+import 'package:agridoc/repository/handlers/product_handler.dart';
 import 'package:agridoc/views/home/home_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -10,17 +11,20 @@ class RazorPay extends GetxController {
   late Razorpay _razorpay;
 
   late BuildContext mycontext;
+  late Map<String, dynamic> details;
 
   @override
   void onInit() async {
     super.onInit();
   }
 
-  void razorpayinit(int amount, BuildContext context) async {
+  void razorpayinit(
+      int amount, BuildContext context, Map<String, dynamic> details) async {
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    this.details = details;
 
     String orderId = await getOrderId(amount);
 
@@ -68,6 +72,8 @@ class RazorPay extends GetxController {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    ProductHandler handler = ProductHandler();
+    handler.addDelivery(details);
     Get.offAndToNamed('/home');
   }
 

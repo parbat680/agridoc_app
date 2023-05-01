@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Welcome, Parbat", style: headingBold),
+                    Text("Welcome,", style: headingBold),
                     SizedBox(
                       height: 20,
                     ),
