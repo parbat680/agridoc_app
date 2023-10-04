@@ -12,20 +12,21 @@ class RazorPay extends GetxController {
 
   late BuildContext mycontext;
   late Map<String, dynamic> details;
+  late Map<String, dynamic> order;
 
   @override
   void onInit() async {
     super.onInit();
   }
 
-  void razorpayinit(
-      int amount, BuildContext context, Map<String, dynamic> details) async {
+  void razorpayinit(int amount, BuildContext context,
+      Map<String, dynamic> details, Map<String, dynamic> order) async {
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     this.details = details;
-
+    this.order = order;
     String orderId = await getOrderId(amount);
 
     mycontext = context;
@@ -73,7 +74,10 @@ class RazorPay extends GetxController {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     ProductHandler handler = ProductHandler();
-    handler.addDelivery(details);
+    String id = await handler.addDelivery(details);
+
+    order['delivery'] = id;
+    handler.addOrder(order);
     Get.offAndToNamed('/home');
   }
 

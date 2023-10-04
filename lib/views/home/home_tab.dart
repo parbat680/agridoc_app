@@ -4,6 +4,7 @@ import 'package:agridoc/views/home/cart.dart';
 import 'package:agridoc/views/home/checkout.dart';
 import 'package:agridoc/views/home/favourites.dart';
 import 'package:agridoc/views/home/home.dart';
+import 'package:agridoc/views/home/orders.dart';
 import 'package:agridoc/views/home/predict.dart';
 import 'package:agridoc/views/home/profile.dart';
 import 'package:agridoc/views/onboarding/login.dart';

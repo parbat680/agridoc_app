@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 
 class CheckoutPage extends StatefulWidget {
   int amount;
-  CheckoutPage({required this.amount});
+  final Map<String, dynamic> product;
+  CheckoutPage({required this.amount, required this.product});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -129,20 +130,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      // Do something with the form data
-                      print('Name: $_name');
-                      print('Email: $_email');
-                      print('Address');
-                      print('City: $_city');
-                      print('State: $_state');
-                      print('Zip: $_zip');
-                      _razorPay.razorpayinit(widget.amount, context, {
-                        "name": _name,
-                        "address1": _address,
-                        "address2": _state,
-                        "city": _city,
-                        "pincode": _zip
-                      });
+
+                      _razorPay.razorpayinit(
+                        widget.amount,
+                        context,
+                        {
+                          "name": _name,
+                          "address1": _address,
+                          "address2": _state,
+                          "city": _city,
+                          "pincode": _zip
+                        },
+                        widget.product,
+                      );
                     }
                   },
                   child: Text('Submit'),

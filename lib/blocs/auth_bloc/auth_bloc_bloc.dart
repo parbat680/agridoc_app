@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:agridoc/repository/handlers/user_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
 
 part 'auth_bloc_event.dart';
 part 'auth_bloc_state.dart';
@@ -35,6 +36,13 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         } else {
           emit(AuthUnauthenticated());
         }
+      }
+
+      if (event is Logout) {
+        UserRepository user = UserRepository();
+        user.deleteToken();
+        emit(AuthUnauthenticated());
+        Get.offAndToNamed('/login');
       }
 
       if (event is Login) {

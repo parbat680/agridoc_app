@@ -21,3 +21,5 @@ class Login extends AuthBlocEvent {
 }
 
 class CheckAuth extends AuthBlocEvent {}
+
+class Logout extends AuthBlocEvent {}

@@ -82,10 +82,27 @@ class ProductHandler {
     try {
       final response = await _helper.post('delivery/add', deliveryDetails);
       log(response.toString());
+      return response['_id'];
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future addOrder(Map<String, dynamic> orderDetails) async {
+    try {
+      final response = await _helper.post('order/add', orderDetails);
+      log(response.toString());
       return true;
     } catch (e) {
       log(e.toString());
       return false;
     }
+  }
+
+  Future getOrders(String category) async {
+    final response = await _helper.get('order/get', '') as List;
+    log(response.toString());
+    return response;
   }
 }

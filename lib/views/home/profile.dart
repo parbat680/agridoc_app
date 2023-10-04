@@ -1,6 +1,10 @@
+import 'package:agridoc/blocs/auth_bloc/auth_bloc_bloc.dart';
+import 'package:agridoc/views/home/orders.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfilePage extends StatelessWidget {
+  final AuthBloc _authBloc = AuthBloc();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -28,17 +32,10 @@ class ProfilePage extends StatelessWidget {
                       radius: 80.0,
                       backgroundColor: Colors.black38,
                       backgroundImage: AssetImage(
-                        'assets/images/pic.jpeg',
+                        'assets/images/man-1276384_960_720.jpg',
                       ),
                     ),
                     SizedBox(height: 10.0),
-                    Text(
-                      'Parbat',
-                      style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
                   ],
                 ),
               ),
@@ -58,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                     leading: Icon(Icons.assignment),
                     title: Text('Orders'),
                     onTap: () {
-                      // Handle orders option
+                      Get.to(() => OrderScreen());
                     },
                   ),
                   ListTile(
@@ -69,17 +66,10 @@ class ProfilePage extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text('Share with friends'),
-                    onTap: () {
-                      // Handle share with friends option
-                    },
-                  ),
-                  ListTile(
                     leading: Icon(Icons.exit_to_app),
                     title: Text('Logout'),
                     onTap: () {
-                      // Handle logout option
+                      _authBloc.add(Logout());
                     },
                   ),
                 ],

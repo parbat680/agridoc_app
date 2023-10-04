@@ -250,7 +250,14 @@ class DetailsPage extends StatelessWidget {
                           ),
                           trailing: ElevatedButton(
                               onPressed: () {
-                                Get.to(CheckoutPage(amount: total));
+                                Get.to(CheckoutPage(
+                                  amount: total,
+                                  product: {
+                                    "product": product.sId,
+                                    "quantity": quantity.value,
+                                    "delivery": ""
+                                  },
+                                ));
                               },
                               child: Text(
                                 "Continue",

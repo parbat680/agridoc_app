@@ -63,7 +63,14 @@ class CartPage extends StatelessWidget {
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(CheckoutPage(amount: total));
+                              Get.to(CheckoutPage(
+                                amount: total,
+                                product: const {
+                                  "product": "",
+                                  "delivery": "",
+                                  "quantity": "0",
+                                },
+                              ));
                             },
                             child: Text("Checkout",
                                 style: poppinsFont.copyWith(

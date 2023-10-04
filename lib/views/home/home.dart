@@ -1,3 +1,4 @@
+import 'package:agridoc/blocs/auth_bloc/auth_bloc_bloc.dart';
 import 'package:agridoc/blocs/products/products_bloc.dart';
 import 'package:agridoc/languages/language.dart';
 import 'package:agridoc/repository/handlers/product_handler.dart';
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     "Tools",
   ];
   final ProductsBloc _products = ProductsBloc();
+  final AuthBloc _authbloc = AuthBloc();
   RxInt selectIndex = 0.obs;
 
   @override
@@ -53,7 +55,20 @@ class _HomePageState extends State<HomePage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Welcome,", style: headingBold),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Welcome ", style: headingBold),
+                        ElevatedButton(
+                            onPressed: () {
+                              _authbloc.add(Logout());
+                            },
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(fontSize: 18),
+                            ))
+                      ],
+                    ),
                     SizedBox(
                       height: 20,
                     ),

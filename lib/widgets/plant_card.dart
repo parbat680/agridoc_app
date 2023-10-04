@@ -81,7 +81,7 @@ class PlantCard extends StatelessWidget {
                           fontSize: 16, color: Colors.black),
                     ),
                     Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Color.fromRGBO(108, 210, 87, 1),
                           shape: BoxShape.circle),
                       child: IconButton(
